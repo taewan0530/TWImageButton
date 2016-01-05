@@ -95,10 +95,6 @@ extension TWImageButton {
         }
     }
     
-    override public func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-    }
-    
     override public func intrinsicContentSize() -> CGSize {
         var size = CGSizeZero
         
