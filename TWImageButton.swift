@@ -25,7 +25,6 @@ public class TWImageButton: UIButton {
                 _beforeImageView = UIImageView()
             }
             guard let beforeImageView = _beforeImageView else { return }
-            beforeImageView.alpha = 0.4
             self.imageLayout(beforeImageView,image: beforeImage)
             beforeImageRect = beforeImageView.bounds
             self.addSubview(beforeImageView)
@@ -39,7 +38,6 @@ public class TWImageButton: UIButton {
                 _afterImageView = UIImageView()
             }
             guard let afterImageView = _afterImageView else { return }
-            afterImageView.alpha = 0.4
             self.imageLayout(afterImageView, image: afterImage)
             afterImageRect = afterImageView.bounds
             self.addSubview(afterImageView)
