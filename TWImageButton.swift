@@ -16,36 +16,38 @@ public class TWImageButton: UIButton {
     private var beforeImageRect = CGRectZero
     private var afterImageRect = CGRectZero
     
-    @IBInspectable public var vertical: Bool = false  { didSet { self.layoutSubviews() } }
+    @IBInspectable public var vertical: Bool = false  { didSet { self.layoutIfNeeded() } }
     
     @IBInspectable public var beforeImage: UIImage? {
         didSet{
-            guard let beforeImage = beforeImage else { return }
-            if _beforeImageView == nil {
-                _beforeImageView = UIImageView()
+            guard let beforeImage = beforeImage else {
+                self.resetImageView(_beforeImageView)
+                return
             }
-            guard let beforeImageView = _beforeImageView else { return }
-            self.imageLayout(beforeImageView,image: beforeImage)
-            beforeImageRect = beforeImageView.bounds
-            self.addSubview(beforeImageView)
+            if _beforeImageView == nil { _beforeImageView = UIImageView() }
+            self.imageLayout(_beforeImageView!,image: beforeImage)
+            beforeImageRect = _beforeImageView!.bounds
+            self.addSubview(_beforeImageView!)
+            self.layoutIfNeeded()
         }
     }
     
     @IBInspectable public var afterImage: UIImage? {
         didSet{
-            guard let afterImage = afterImage else { return }
-            if _afterImageView == nil {
-                _afterImageView = UIImageView()
+            guard let afterImage = afterImage else {
+                self.resetImageView(_afterImageView)
+                return
             }
-            guard let afterImageView = _afterImageView else { return }
-            self.imageLayout(afterImageView, image: afterImage)
-            afterImageRect = afterImageView.bounds
-            self.addSubview(afterImageView)
+            if _afterImageView == nil { _afterImageView = UIImageView() }
+            self.imageLayout(_afterImageView!, image: afterImage)
+            afterImageRect = _afterImageView!.bounds
+            self.addSubview(_afterImageView!)
+            self.layoutIfNeeded()
         }
     }
     
-    @IBInspectable public var beforeSpacing: CGFloat = 0 { didSet { self.layoutSubviews() } }
-    @IBInspectable public var afterSpacing: CGFloat = 0 { didSet { self.layoutSubviews() } }
+    @IBInspectable public var beforeSpacing: CGFloat = 0 { didSet { self.layoutIfNeeded() } }
+    @IBInspectable public var afterSpacing: CGFloat = 0 { didSet { self.layoutIfNeeded() } }
     
 }
 
@@ -113,6 +115,17 @@ extension TWImageButton {
     private func imageLayout(imageView: UIImageView, image: UIImage){
         imageView.image = image
         imageView.bounds.size = image.size
+    }
+    
+    private func resetImageView(imageView: UIImageView?){
+        guard let imageView = imageView else { return }
+        if imageView == _beforeImageView {
+            beforeImageRect = CGRectZero
+        } else if imageView == _afterImageView {
+            afterImageRect = CGRectZero
+        }
+        imageView.removeFromSuperview()
+        self.layoutIfNeeded()
     }
     
     private func contentFrame() -> CGRect {
