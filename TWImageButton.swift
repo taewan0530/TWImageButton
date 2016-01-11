@@ -16,9 +16,9 @@ public class TWImageButton: UIButton {
     private var beforeImageRect = CGRectZero
     private var afterImageRect = CGRectZero
     
-    @IBInspectable var vertical: Bool = false
+    @IBInspectable public var vertical: Bool = false  { didSet { self.layoutSubviews() } }
     
-    @IBInspectable var beforeImage: UIImage? {
+    @IBInspectable public var beforeImage: UIImage? {
         didSet{
             guard let beforeImage = beforeImage else { return }
             if _beforeImageView == nil {
@@ -31,7 +31,7 @@ public class TWImageButton: UIButton {
         }
     }
     
-    @IBInspectable var afterImage: UIImage? {
+    @IBInspectable public var afterImage: UIImage? {
         didSet{
             guard let afterImage = afterImage else { return }
             if _afterImageView == nil {
@@ -44,15 +44,13 @@ public class TWImageButton: UIButton {
         }
     }
     
-    @IBInspectable var beforeSpacing: CGFloat = 0
-    @IBInspectable var afterSpacing: CGFloat = 0
+    @IBInspectable public var beforeSpacing: CGFloat = 0 { didSet { self.layoutSubviews() } }
+    @IBInspectable public var afterSpacing: CGFloat = 0 { didSet { self.layoutSubviews() } }
     
 }
 
 // MARK - layout
 extension TWImageButton {
-    
-    
     
     override public func layoutSubviews() {
         super.layoutSubviews()
