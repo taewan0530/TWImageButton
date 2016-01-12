@@ -18,19 +18,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fg7-fK-Gve" customClass="TWImageButton" customModule="TWImageButton" customModuleProvider="target">
-                                <rect key="frame" x="256" y="271" width="89" height="58"/>
+                                <rect key="frame" x="216" y="258" width="169" height="84"/>
                                 <color key="backgroundColor" red="1" green="0.24105521320000001" blue="0.29534005369999999" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="TestButton"/>
+                                <state key="normal" title="TestButton" image="btn_reasonableprice"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="image" keyPath="beforeImage" value="btn_reasonableprice"/>
-                                    <userDefinedRuntimeAttribute type="image" keyPath="afterImage" value="picto_next"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="vertical" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="afterSpacing">
-                                        <real key="value" value="0.0"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="beforeSpacing">
-                                        <real key="value" value="0.0"/>
-                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="afterImage" value="btn_reasonableprice"/>
                                 </userDefinedRuntimeAttributes>
                             </button>
                         </subviews>
@@ -48,6 +42,5 @@
     </scenes>
     <resources>
         <image name="btn_reasonableprice" width="80" height="28"/>
-        <image name="picto_next" width="8" height="8"/>
     </resources>
 </document>

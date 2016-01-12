@@ -10,13 +10,29 @@ import UIKit
 
 @IBDesignable
 public class TWImageButton: UIButton {
+    
+    private let highlightedAlpha: CGFloat = 0.2
+    
     private var _beforeImageView: UIImageView?
     private var _afterImageView: UIImageView?
     
     private var beforeImageRect = CGRectZero
     private var afterImageRect = CGRectZero
     
-    @IBInspectable public var vertical: Bool = false  { didSet { self.layoutIfNeeded() } }
+    override public var highlighted: Bool {
+        willSet {
+            if newValue == highlighted { return }
+            if self.buttonType == .System {
+                let alpha = newValue ? highlightedAlpha : 1
+                UIView.animateWithDuration(newValue ? 0.1 : 0.3, animations: { () -> Void in
+                    self._beforeImageView?.alpha = alpha
+                    self._afterImageView?.alpha = alpha
+                })
+            }
+        }
+    }
+    
+    @IBInspectable public var vertical: Bool = false  { didSet { self.layoutImages() } }
     
     @IBInspectable public var beforeImage: UIImage? {
         didSet{
@@ -46,17 +62,40 @@ public class TWImageButton: UIButton {
         }
     }
     
-    @IBInspectable public var beforeSpacing: CGFloat = 0 { didSet { self.layoutIfNeeded() } }
-    @IBInspectable public var afterSpacing: CGFloat = 0 { didSet { self.layoutIfNeeded() } }
+    @IBInspectable public var beforeSpacing: CGFloat = 0 { didSet { self.layoutImages() } }
+    @IBInspectable public var afterSpacing: CGFloat = 0 { didSet { self.layoutImages() } }
     
 }
 
 // MARK - layout
 extension TWImageButton {
-    
     override public func layoutSubviews() {
         super.layoutSubviews()
+        self.layoutImages()
+    }
+    
+    override public func intrinsicContentSize() -> CGSize {
+        var size = CGSizeZero
         
+        if let _ = self.titleLabel?.text, _ = self.imageView?.image {
+            size = self.sizeThatFits(self.bounds.size)
+        } else if let _ = self.titleLabel?.text {
+            size = self.titleLabel!.sizeThatFits(self.bounds.size)
+        } else if let image = self.imageView?.image {
+            size = image.size
+        }
+        
+        if vertical {
+            size.height += beforeImageRect.height + afterImageRect.height + beforeSpacing + afterSpacing
+            size.width = max(size.width, max(beforeImageRect.width, afterImageRect.width))
+        } else {
+            size.width += beforeImageRect.width + afterImageRect.width + beforeSpacing + afterSpacing
+            size.height = max(size.height, max(beforeImageRect.height, afterImageRect.height))
+        }
+        return size
+    }
+    
+    private func layoutImages(){
         let contentRect = contentFrame()
         
         if vertical {
@@ -91,25 +130,21 @@ extension TWImageButton {
         }
     }
     
-    override public func intrinsicContentSize() -> CGSize {
-        var size = CGSizeZero
+    private func contentFrame() -> CGRect {
+        let centerPoint = CGPointMake(self.bounds.width/2, self.bounds.height/2)
+        let imageViewRect = self.imageView?.bounds ?? CGRectZero
+        let titleLabelRect = self.titleLabel?.bounds ?? CGRectZero
         
-        if let _ = self.titleLabel?.text, _ = self.imageView?.image {
-            size = self.sizeThatFits(self.bounds.size)
-        } else if let _ = self.titleLabel?.text {
-            size = self.titleLabel!.sizeThatFits(self.bounds.size)
-        } else if let image = self.imageView?.image {
-            size = image.size
-        }
+        let w = imageViewRect.width + titleLabelRect.width
+        let h = max(imageViewRect.height, titleLabelRect.height)
         
-        if vertical {
-            size.height += beforeImageRect.height + afterImageRect.height + beforeSpacing + afterSpacing
-            size.width = max(size.width, max(beforeImageRect.width, afterImageRect.width))
-        } else {
-            size.width += beforeImageRect.width + afterImageRect.width + beforeSpacing + afterSpacing
-            size.height = max(size.height, max(beforeImageRect.height, afterImageRect.height))
-        }
-        return size
+        var x = centerPoint.x - (imageViewRect.width + titleLabelRect.width)/2
+        var y = centerPoint.y - h/2
+        
+        x += vertical ? 0 : (beforeImageRect.width - afterImageRect.width)/2 + (beforeSpacing - afterSpacing)/2
+        y += vertical ? (beforeImageRect.height - afterImageRect.height)/2 + (beforeSpacing - afterSpacing)/2 : 0
+        
+        return CGRectMake(x, y, w, h)
     }
     
     private func imageLayout(imageView: UIImageView, image: UIImage){
@@ -128,20 +163,17 @@ extension TWImageButton {
         self.layoutIfNeeded()
     }
     
-    private func contentFrame() -> CGRect {
-        let centerPoint = CGPointMake(self.bounds.width/2, self.bounds.height/2)
-        let imageViewRect = self.imageView?.bounds ?? CGRectZero
-        let titleLabelRect = self.titleLabel?.bounds ?? CGRectZero
-        
-        let w = imageViewRect.width + titleLabelRect.width
-        let h = max(imageViewRect.height, titleLabelRect.height)
-        
-        var x = centerPoint.x - (imageViewRect.width + titleLabelRect.width)/2
-        var y = centerPoint.y - h/2
-        
-        x += vertical ? 0 : (beforeImageRect.width - afterImageRect.width)/2 + (beforeSpacing - afterSpacing)/2
-        y += vertical ? (beforeImageRect.height - afterImageRect.height)/2 + (beforeSpacing - afterSpacing)/2 : 0
-        
-        return CGRectMake(x, y, w, h)
-    }
 }
+
+//extension TWImageButton {
+//
+//    public override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//        super.touchesBegan(touches, withEvent: event)
+//        print(self.titleLabel?.alpha)
+//    }
+//
+//    public override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//        super.touchesEnded(touches, withEvent: event)
+//        print(self.titleLabel?.alpha)
+//    }
+//}
